@@ -39,7 +39,7 @@ set(DEPENDENCIES
   "tf2"
   "tf2_ros"
   "limo_msgs"
-  "sensor_msgs"
+   "sensor_msgs"
 )
 
 add_executable(limo_base 
@@ -64,16 +64,16 @@ install(
   DESTINATION include
 )
 
-install(TARGETS  
-  limo_base  
+install(TARGETS
+  limo_base
+  tf_pub
   DESTINATION lib/${PROJECT_NAME})
 
-  install(TARGETS  
-  tf_pub  
-  DESTINATION lib/${PROJECT_NAME})
-
-install(DIRECTORY launch src 
+install(DIRECTORY launch param src
   DESTINATION share/${PROJECT_NAME}/)
+
+install(PROGRAMS scripts/tf_pub.py
+  DESTINATION lib/${PROJECT_NAME})
   
 ament_export_include_directories(
   include

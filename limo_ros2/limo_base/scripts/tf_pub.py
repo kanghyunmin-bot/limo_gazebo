@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import sys
 from geometry_msgs.msg import TransformStamped
 import rclpy
@@ -22,12 +20,12 @@ class StaticFramePublisher(Node):
       static_transformStamped = TransformStamped()
       static_transformStamped.header.stamp = self.get_clock().now().to_msg()
       static_transformStamped.header.frame_id = 'world'
-      static_transformStamped.child_frame_id = transformation[1]
-      static_transformStamped.transform.translation.x = float(transformation[2])
-      static_transformStamped.transform.translation.y = float(transformation[3])
-      static_transformStamped.transform.translation.z = float(transformation[4])
+      static_transformStamped.child_frame_id = sys.argv[1]
+      static_transformStamped.transform.translation.x = float(sys.argv[2])
+      static_transformStamped.transform.translation.y = float(sys.argv[3])
+      static_transformStamped.transform.translation.z = float(sys.argv[4])
       quat = tf_transformations.quaternion_from_euler(
-            float(transformation[5]), float(transformation[6]), float(transformation[7]))
+            float(sys.argv[5]), float(sys.argv[6]), float(sys.argv[7]))
       static_transformStamped.transform.rotation.x = quat[0]
       static_transformStamped.transform.rotation.y = quat[1]
       static_transformStamped.transform.rotation.z = quat[2]
@@ -58,7 +56,3 @@ def main():
       pass
 
    rclpy.shutdown()
-
-
-if __name__ == '__main__':
-   main()
