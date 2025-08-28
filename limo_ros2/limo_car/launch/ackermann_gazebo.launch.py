@@ -22,7 +22,7 @@ def generate_launch_description():
 
     # definiert Path für Modell
     package_name = 'limo_car'
-    world_file_path = 'worlds/empty_world.model'
+    world_file_path = 'worlds/empty.world'
     rviz_path = 'rviz/gazebo.rviz'
 
     pkg_path = os.path.join(get_package_share_directory(package_name))
@@ -46,15 +46,26 @@ def generate_launch_description():
     spawn_yaw_val = '0.0'
 
     mbot = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory(package_name),'launch', 'ackermann.launch.py'
-        )]), launch_arguments={'use_sim_time': 'true', 'world': world_path}.items()
+        PythonLaunchDescriptionSource([
+            os.path.join(
+                get_package_share_directory(package_name),
+                'launch',
+                'ackermann.launch.py'
+            )
+        ]),
+        launch_arguments={'use_sim_time': 'true'}.items()
     )
 
     # Einbindung der Gazebo-Startdatei, die im gazebo_ros-Paket enthalten ist
     gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]),
+        PythonLaunchDescriptionSource([
+            os.path.join(
+                get_package_share_directory('gazebo_ros'),
+                'launch',
+                'gazebo.launch.py'
+            )
+        ]),
+        launch_arguments={'world': world_path}.items()
     )
 
     # laufen ein leere node aus den gazebo_ros package
