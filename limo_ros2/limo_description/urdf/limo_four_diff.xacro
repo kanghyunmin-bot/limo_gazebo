@@ -10,7 +10,7 @@
   <xacro:property name="base_z_size" value="0.10" />
   <xacro:property name="wheelbase" value="0.2"/>
   <xacro:property name="track" value="0.13"/>
-  <xacro:property name="wheel_vertical_offset" value="-0.12" />
+  <xacro:property name="wheel_vertical_offset" value="-0.105" />
   <xacro:property name="wheel_length" value="0.045" />
   <xacro:property name="wheel_radius" value="0.045" />
 
@@ -23,12 +23,22 @@
 
   <!-- Base -->
   <link name="base_link">
+    <!-- 단일 질량/관성 블록 -->
+    <inertial>
+      <origin xyz="0 0 -0.05" rpy="0 0 0"/>
+      <mass value="10.0"/>
+      <inertia ixx="0.0203333333" ixy="0" ixz="0"
+               iyy="0.0224166667" iyz="0"
+               izz="0.0260833333"/>
+    </inertial>
+
     <visual>
       <origin xyz="0 0 -0.15" rpy="0 0 1.57" />
       <geometry>
         <mesh filename="file://$(find limo_description)/meshes/limo_base.dae" scale="1 1 1"/>
       </geometry>
     </visual>
+
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
@@ -36,55 +46,6 @@
       </geometry>
     </collision>
   </link>
-
-  <!-- 분산 질량 블록 (총합 10kg) -->
-  <link name="mass_fl">
-    <inertial>
-      <origin xyz="0.08 0.06 -0.10"/>
-      <mass value="2.5"/>
-      <inertia ixx="0.005" iyy="0.005" izz="0.005"/>
-    </inertial>
-  </link>
-  <joint name="joint_mass_fl" type="fixed">
-    <parent link="base_link"/>
-    <child link="mass_fl"/>
-  </joint>
-
-  <link name="mass_fr">
-    <inertial>
-      <origin xyz="0.08 -0.06 -0.10"/>
-      <mass value="2.5"/>
-      <inertia ixx="0.005" iyy="0.005" izz="0.005"/>
-    </inertial>
-  </link>
-  <joint name="joint_mass_fr" type="fixed">
-    <parent link="base_link"/>
-    <child link="mass_fr"/>
-  </joint>
-
-  <link name="mass_rl">
-    <inertial>
-      <origin xyz="-0.08 0.06 -0.10"/>
-      <mass value="2.5"/>
-      <inertia ixx="0.005" iyy="0.005" izz="0.005"/>
-    </inertial>
-  </link>
-  <joint name="joint_mass_rl" type="fixed">
-    <parent link="base_link"/>
-    <child link="mass_rl"/>
-  </joint>
-
-  <link name="mass_rr">
-    <inertial>
-      <origin xyz="-0.08 -0.06 -0.10"/>
-      <mass value="2.5"/>
-      <inertia ixx="0.005" iyy="0.005" izz="0.005"/>
-    </inertial>
-  </link>
-  <joint name="joint_mass_rr" type="fixed">
-    <parent link="base_link"/>
-    <child link="mass_rr"/>
-  </joint>
 
   <!-- Sensors -->
   <xacro:limo_laser parent_prefix="base_link" frame_prefix="laser">
@@ -139,7 +100,9 @@
       <visualize>true</visualize>
       <update_rate>20</update_rate>
       <ray>
-        <scan><horizontal><samples>720</samples><resolution>1.0</resolution><min_angle>-3.14</min_angle><max_angle>3.14</max_angle></horizontal></scan>
+        <scan><horizontal><samples>720</samples><resolution>1.0</resolution>
+          <min_angle>-3.14</min_angle><max_angle>3.14</max_angle>
+        </horizontal></scan>
         <range><min>0.3</min><max>15.0</max><resolution>0.005</resolution></range>
       </ray>
       <plugin name="scan" filename="libgazebo_ros_ray_sensor.so">
@@ -152,31 +115,62 @@
 
   <!-- Gazebo: Base friction -->
   <gazebo reference="base_link">
-    <mu1>2.0</mu1><mu2>1.5</mu2>
-    <slip1>0.8</slip1><slip2>0.8</slip2>
-    <kp>5e6</kp><kd>500</kd>
-    <max_vel>0.2</max_vel><min_depth>0.005</min_depth>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <slip1>0.05</slip1>
+    <slip2>0.05</slip2>
+    <kp>2.0e6</kp>
+    <kd>5</kd>
+    <maxVel>0.2</maxVel>
+    <minDepth>0.002</minDepth>
+    <selfCollide>false</selfCollide>
+    <maxContacts>15</maxContacts>
   </gazebo>
 
-  <!-- Gazebo: Wheels -->
-  <gazebo reference="front_left_wheel"><mu1>10</mu1><mu2>10</mu2></gazebo>
-  <gazebo reference="front_right_wheel"><mu1>10</mu1><mu2>10</mu2></gazebo>
-  <gazebo reference="rear_left_wheel"><mu1>10</mu1><mu2>10</mu2></gazebo>
-  <gazebo reference="rear_right_wheel"><mu1>10</mu1><mu2>10</mu2></gazebo>
+  <!-- Gazebo: Wheel friction -->
+  <gazebo reference="front_left_wheel">
+    <mu1>3.0</mu1><mu2>2.5</mu2>
+    <slip1>0.02</slip1><slip2>0.02</slip2>
+    <kp>1.0e6</kp><kd>5</kd>
+    <maxVel>0.2</maxVel><minDepth>0.002</minDepth>
+  </gazebo>
+  <gazebo reference="front_right_wheel">
+    <mu1>3.0</mu1><mu2>2.5</mu2>
+    <slip1>0.02</slip1><slip2>0.02</slip2>
+    <kp>1.0e6</kp><kd>5</kd>
+    <maxVel>0.2</maxVel><minDepth>0.002</minDepth>
+  </gazebo>
+  <gazebo reference="rear_left_wheel">
+    <mu1>3.0</mu1><mu2>2.5</mu2>
+    <slip1>0.02</slip1><slip2>0.02</slip2>
+    <kp>1.0e6</kp><kd>5</kd>
+    <maxVel>0.2</maxVel><minDepth>0.002</minDepth>
+  </gazebo>
+  <gazebo reference="rear_right_wheel">
+    <mu1>3.0</mu1><mu2>2.5</mu2>
+    <slip1>0.02</slip1><slip2>0.02</slip2>
+    <kp>1.0e6</kp><kd>5</kd>
+    <maxVel>0.2</maxVel><minDepth>0.002</minDepth>
+  </gazebo>
 
-  <!-- Gazebo: Diff drive -->
+  <!-- Gazebo: Diff drive plugin (조인트 이름 = 매크로 생성 그대로) -->
   <gazebo>
     <plugin name="four_diff_controller" filename="libgazebo_ros_diff_drive.so">
       <update_rate>50</update_rate>
-      <num_wheel_pairs>2</num_wheel_pairs>
+
+      <!-- 왼쪽 바퀴 두 개 -->
       <left_joint>front_left_wheel</left_joint>
-      <right_joint>front_right_wheel</right_joint>
       <left_joint>rear_left_wheel</left_joint>
+
+      <!-- 오른쪽 바퀴 두 개 -->
+      <right_joint>front_right_wheel</right_joint>
       <right_joint>rear_right_wheel</right_joint>
-      <wheel_separation>0.172</wheel_separation>
+      <num_wheel_pairs>2</num_wheel_pairs>
+      <wheel_separation>${track}</wheel_separation>
       <wheel_diameter>0.09</wheel_diameter>
-      <max_wheel_torque>20</max_wheel_torque>
-      <max_wheel_acceleration>0.5</max_wheel_acceleration>
+      <max_wheel_torque>8.0</max_wheel_torque>
+      <max_wheel_acceleration>0.15</max_wheel_acceleration>
+
       <command_topic>cmd_vel</command_topic>
       <odometry_topic>odom</odometry_topic>
       <robot_base_frame>base_footprint</robot_base_frame>

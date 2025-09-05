@@ -30,7 +30,7 @@
         </plugin>
 
         <plugin name="four_diff_controller" filename="libgazebo_ros_ackerman.so">
-            <updateRate>100.0</updateRate>
+            <updateRate>50</updateRate>
             <robotNamespace>$(arg robot_namespace)</robotNamespace>
             <leftFrontJoint>front_left_wheel</leftFrontJoint>
             <rightFrontJoint>front_right_wheel</rightFrontJoint>
@@ -38,11 +38,11 @@
             <rightRearJoint>rear_right_wheel</rightRearJoint>
             <leftHingeJoint>left_steering_hinge_wheel</leftHingeJoint>
             <rightHingeJoint>right_steering_hinge_wheel</rightHingeJoint>
-            <wheelSeparation>0.172</wheelSeparation>
+            <wheelSeparation>${track}</wheelSeparation>
             <wheelDiameter>0.09</wheelDiameter>
             <robotBaseFrame>base_footprint</robotBaseFrame>
             <commandTopic>cmd_vel</commandTopic>
-            <torque>50</torque>
+            <torque>8.0</torque>
             <broadcastTF>true</broadcastTF>
             <odometryTopic>odom</odometryTopic>
             <odometryFrame>odom</odometryFrame>
@@ -52,3 +52,35 @@
         </plugin>
     </gazebo>
 </robot>
+  <gazebo reference="front_left_wheel">
+    <mu1>3.0</mu1><mu2>2.5</mu2>
+    <slip1>0.02</slip1><slip2>0.02</slip2>
+    <kp>1.0e6</kp><kd>5</kd>
+    <minDepth>0.002</minDepth>
+</gazebo>
+  <gazebo reference="front_right_wheel">
+    <mu1>3.0</mu1><mu2>2.5</mu2>
+    <slip1>0.02</slip1><slip2>0.02</slip2>
+    <kp>1.0e6</kp><kd>5</kd>
+    <minDepth>0.002</minDepth>
+</gazebo>
+  <gazebo reference="rear_left_wheel">
+    <mu1>3.0</mu1><mu2>2.5</mu2>
+    <slip1>0.02</slip1><slip2>0.02</slip2>
+    <kp>1.0e6</kp><kd>5</kd>
+    <minDepth>0.002</minDepth>
+</gazebo>
+  <gazebo reference="rear_right_wheel">
+    <mu1>3.0</mu1><mu2>2.5</mu2>
+    <slip1>0.02</slip1><slip2>0.02</slip2>
+    <kp>1.0e6</kp><kd>5</kd>
+    <minDepth>0.002</minDepth>
+</gazebo>
+
+  <gazebo reference="base_link">
+    <mu1>1.0</mu1><mu2>1.0</mu2>
+    <slip1>0.05</slip1><slip2>0.05</slip2>
+    <kp>2.0e6</kp><kd>5</kd>
+    <maxVel>0.2</maxVel><minDepth>0.002</minDepth>
+  </gazebo>
+

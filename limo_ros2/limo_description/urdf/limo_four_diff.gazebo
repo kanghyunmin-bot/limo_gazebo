@@ -14,41 +14,41 @@
     <xacro:gazebo_imu frame_prefix="imu" /> -->
     
     <gazebo reference="front_left_wheel">
-        <mu1>10</mu1>
-        <mu2>10</mu2>
-        <kp>10000000.0</kp>
-        <kd>1.0</kd>
-        <minDepth>0.01</minDepth>
+        <mu1>3.0</mu1>
+        <mu2>2.5</mu2>
+        <kp>1.0e6</kp>
+        <kd>5</kd>
+        <minDepth>0.002</minDepth>
         <fdir1>1 0 0</fdir1>
         <maxContacts value="64"/>
-    </gazebo>
+    <slip1>0.02</slip1><slip2>0.02</slip2></gazebo>
     <gazebo reference="front_right_wheel">
-        <mu1>10</mu1>
-        <mu2>10</mu2>
-        <kp>10000000.0</kp>
-        <kd>1.0</kd>
-        <minDepth>0.01</minDepth>
+        <mu1>3.0</mu1>
+        <mu2>2.5</mu2>
+        <kp>1.0e6</kp>
+        <kd>5</kd>
+        <minDepth>0.002</minDepth>
         <fdir1>1 0 0</fdir1>
         <maxContacts value="64"/>
-    </gazebo>
+    <slip1>0.02</slip1><slip2>0.02</slip2></gazebo>
     <gazebo reference="rear_left_wheel">
-        <mu1>10</mu1>
-        <mu2>10</mu2>
-        <kp>10000000.0</kp>
-        <kd>1.0</kd>
-        <minDepth>0.01</minDepth>
+        <mu1>3.0</mu1>
+        <mu2>2.5</mu2>
+        <kp>1.0e6</kp>
+        <kd>5</kd>
+        <minDepth>0.002</minDepth>
         <fdir1>1 0 0</fdir1>
         <maxContacts value="64"/>
-    </gazebo>
+    <slip1>0.02</slip1><slip2>0.02</slip2></gazebo>
     <gazebo reference="rear_right_wheel">
-        <mu1>10</mu1>
-        <mu2>10</mu2>
-        <kp>10000000.0</kp>
-        <kd>1.0</kd>
-        <minDepth>0.01</minDepth>
+        <mu1>3.0</mu1>
+        <mu2>2.5</mu2>
+        <kp>1.0e6</kp>
+        <kd>5</kd>
+        <minDepth>0.002</minDepth>
         <fdir1>1 0 0</fdir1>
         <maxContacts value="64"/>
-    </gazebo>
+    <slip1>0.02</slip1><slip2>0.02</slip2></gazebo>
 
     <!-- <gazebo>
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
@@ -56,17 +56,17 @@
         </plugin>
 
         <plugin name="four_diff_controller" filename="libgazebo_ros_skid_steer_drive.so">
-            <updateRate>100.0</updateRate>
+            <updateRate>50</updateRate>
             <robotNamespace>$(arg robot_namespace)</robotNamespace>
             <leftFrontJoint>front_left_wheel</leftFrontJoint>
             <rightFrontJoint>front_right_wheel</rightFrontJoint>
             <leftRearJoint>rear_left_wheel</leftRearJoint>
             <rightRearJoint>rear_right_wheel</rightRearJoint>
-            <wheelSeparation>0.172</wheelSeparation>
+            <wheelSeparation>${track}</wheelSeparation>
             <wheelDiameter>0.09</wheelDiameter>
             <robotBaseFrame>base_footprint</robotBaseFrame>
             <commandTopic>cmd_vel</commandTopic>
-            <torque>50</torque>
+            <torque>8.0</torque>
             <broadcastTF>true</broadcastTF>
             <odometryTopic>odom</odometryTopic>
             <odometryFrame>odom</odometryFrame>
