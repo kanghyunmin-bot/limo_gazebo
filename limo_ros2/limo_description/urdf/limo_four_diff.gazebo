@@ -9,9 +9,9 @@
     <xacro:limo_wheel_transmission wheel_prefix="rear_left" />
     <xacro:limo_wheel_transmission wheel_prefix="rear_right" />
     <!-- Controller configurations -->
-    <!-- <xacro:gazebo_laser frame_prefix="laser" />
+    <xacro:gazebo_laser frame_prefix="laser" />
     <xacro:gazebo_depth_camera frame_prefix="depth_camera" />
-    <xacro:gazebo_imu frame_prefix="imu" /> -->
+    <xacro:gazebo_imu frame_prefix="imu" />
     
     <gazebo reference="front_left_wheel">
         <mu1>3.0</mu1>
@@ -50,7 +50,7 @@
         <maxContacts value="64"/>
     <slip1>0.02</slip1><slip2>0.02</slip2></gazebo>
 
-    <!-- <gazebo>
+    <gazebo>
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
             <robotNamespace>$(arg robot_namespace)</robotNamespace>
         </plugin>
@@ -74,5 +74,5 @@
             <covariance_y>0.000100</covariance_y>
             <covariance_yaw>0.010000</covariance_yaw>
         </plugin>
-    </gazebo> -->
+    </gazebo>
 </robot>
