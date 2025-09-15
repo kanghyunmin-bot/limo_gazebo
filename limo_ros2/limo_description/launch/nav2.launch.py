@@ -12,9 +12,12 @@ from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
     pkg_share = get_package_share_directory('limo_description')
     default_params = os.path.join(pkg_share, 'config', 'nav2_params.yaml')
+    default_map = os.path.join(pkg_share, 'map', 'map.yaml')
 
     use_sim_time = LaunchConfiguration('use_sim_time')
     params_file = LaunchConfiguration('params_file')
+    map_file = LaunchConfiguration('map')
+    slam = LaunchConfiguration('slam')
 
     declare_sim_time = DeclareLaunchArgument(
         'use_sim_time', default_value='false',
@@ -24,15 +27,27 @@ def generate_launch_description():
         'params_file', default_value=default_params,
         description='Full path to the ROS2 parameters file to use')
 
+    declare_map = DeclareLaunchArgument(
+        'map', default_value=default_map,
+        description='Full path to map yaml file to load')
+
+    declare_slam = DeclareLaunchArgument(
+        'slam', default_value='True',
+        description='Whether to run SLAM')
+
     bringup_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
             get_package_share_directory('nav2_bringup'),
             'launch', 'bringup_launch.py')),
         launch_arguments={'use_sim_time': use_sim_time,
-                          'params_file': params_file}.items())
+                          'params_file': params_file,
+                          'slam': slam,
+                          'map': map_file}.items())
 
     return LaunchDescription([
         declare_sim_time,
         declare_params_file,
+        declare_map,
+        declare_slam,
         bringup_cmd,
     ])
