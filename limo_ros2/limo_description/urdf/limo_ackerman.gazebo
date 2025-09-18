@@ -1,56 +1,51 @@
 <?xml version="1.0"?>
 <robot name="limo_ackerman_gazebo" xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <!-- 기존 Gazebo 매크로 라이브러리 -->
+
   <xacro:include filename="$(find limo_description)/urdf/limo_gazebo.gazebo" />
 
-  <!-- Actuators: wheels + steering hinges -->
+  <!-- Transmissions -->
   <xacro:limo_wheel_transmission wheel_prefix="front_right" />
   <xacro:limo_wheel_transmission wheel_prefix="front_left" />
   <xacro:limo_wheel_transmission wheel_prefix="rear_left" />
   <xacro:limo_wheel_transmission wheel_prefix="rear_right" />
-  <xacro:limo_steering_hinge_transmission wheel_prefix="left_steering_hinge" />
-  <xacro:limo_steering_hinge_transmission wheel_prefix="right_steering_hinge" />
+  <xacro:limo_steering_hinge_transmission wheel_prefix="left_steering_joint" />
+  <xacro:limo_steering_hinge_transmission wheel_prefix="right_steering_joint" />
 
   <!-- Sensors -->
   <xacro:gazebo_laser frame_prefix="laser" />
   <xacro:gazebo_depth_camera frame_prefix="depth_camera" />
   <xacro:gazebo_imu frame_prefix="imu" />
 
+  <!-- Contact/friction -->
+  <gazebo reference="front_left_joint">...</gazebo>
+  <gazebo reference="front_right_joint">...</gazebo>
+  <gazebo reference="rear_left_joint">...</gazebo>
+  <gazebo reference="rear_right_joint">...</gazebo>
+  <gazebo reference="base_link">...</gazebo>
 
+  <!-- Ackermann plugin -->
+  <gazebo>
+    <plugin name="ackermann_steering_controller" filename="libgazebo_ros_ackermann_drive.so">
+      <updateRate>50</updateRate>
+      <robotNamespace>$(arg robot_namespace)</robotNamespace>
 
-  <!-- Contact/friction tuning -->
-  <gazebo reference="front_left_wheel">
-    <mu1>3.0</mu1><mu2>2.5</mu2>
-    <slip1>0.02</slip1><slip2>0.02</slip2>
-    <kp>1.0e6</kp><kd>5</kd>
-    <minDepth>0.002</minDepth>
-  </gazebo>
+      <leftSteeringJoint>left_steering_joint</leftSteeringJoint>
+      <rightSteeringJoint>right_steering_joint</rightSteeringJoint>
 
-  <gazebo reference="front_right_wheel">
-    <mu1>3.0</mu1><mu2>2.5</mu2>
-    <slip1>0.02</slip1><slip2>0.02</slip2>
-    <kp>1.0e6</kp><kd>5</kd>
-    <minDepth>0.002</minDepth>
-  </gazebo>
+      <frontLeftJoint>front_left_joint</frontLeftJoint>
+      <frontRightJoint>front_right_joint</frontRightJoint>
+      <rearLeftJoint>rear_left_joint</rearLeftJoint>
+      <rearRightJoint>rear_right_joint</rearRightJoint>
 
-  <gazebo reference="rear_left_wheel">
-    <mu1>3.0</mu1><mu2>2.5</mu2>
-    <slip1>0.02</slip1><slip2>0.02</slip2>
-    <kp>1.0e6</kp><kd>5</kd>
-    <minDepth>0.002</minDepth>
-  </gazebo>
+      <wheelSeparation>${track}</wheelSeparation>
+      <wheelBase>${wheelbase}</wheelBase>
+      <wheelRadius>${wheel_radius}</wheelRadius>
 
-  <gazebo reference="rear_right_wheel">
-    <mu1>3.0</mu1><mu2>2.5</mu2>
-    <slip1>0.02</slip1><slip2>0.02</slip2>
-    <kp>1.0e6</kp><kd>5</kd>
-    <minDepth>0.002</minDepth>
-  </gazebo>
-
-  <gazebo reference="base_link">
-    <mu1>1.0</mu1><mu2>1.0</mu2>
-    <slip1>0.05</slip1><slip2>0.05</slip2>
-    <kp>2.0e6</kp><kd>5</kd>
-    <maxVel>0.2</maxVel><minDepth>0.002</minDepth>
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <robotBaseFrame>base_link</robotBaseFrame>
+      <broadcastTF>true</broadcastTF>
+    </plugin>
   </gazebo>
 </robot>

@@ -4,22 +4,18 @@
   <!-- Args -->
   <xacro:arg name="robot_namespace" default="/limo"/>
 
-  <!-- Common macros (바퀴/힌지 링크 생성 매크로 포함) -->
+  <!-- Common macros -->
   <xacro:include filename="$(find limo_description)/urdf/limo_xacro.xacro"/>
   <xacro:include filename="$(find limo_description)/urdf/limo_steering_hinge.xacro"/>
 
-  <!-- ===== Vehicle parameters (변수는 include 전에 선언되어야 함) ===== -->
+  <!-- ===== Vehicle parameters ===== -->
   <xacro:property name="M_PI" value="3.141592653589793"/>
   <xacro:property name="base_x_size" value="0.13"/>
   <xacro:property name="base_y_size" value="0.12"/>
   <xacro:property name="base_z_size" value="0.10"/>
-
-  <!-- 차체 치수 -->
-  <xacro:property name="wheelbase" value="0.40"/>  <!-- 앞/뒤 축 간 거리 (m) -->
-  <xacro:property name="track" value="0.26"/>      <!-- 좌/우 바퀴 간 거리 (m) -->
+  <xacro:property name="wheelbase" value="0.40"/>
+  <xacro:property name="track" value="0.26"/>
   <xacro:property name="wheel_vertical_offset" value="-0.12"/>
-
-  <!-- 휠 치수 -->
   <xacro:property name="wheel_length" value="0.045"/>
   <xacro:property name="wheel_radius" value="0.045"/>
 
@@ -51,18 +47,16 @@
     </collision>
   </link>
 
-  <!-- ===== Front steering (Ackermann): steering hinge + wheel (구동) ===== -->
-  <!-- 왼쪽 앞바퀴: 힌지 링크를 먼저 만들고 그 밑에 휠(구동) 조인트가 매크로 안에서 생성됨 -->
-  <xacro:limo_left_steering_hinge parent_prefix="base_link" wheel_prefix="left_steering_hinge">
+  <!-- ===== Front steering (Ackermann) ===== -->
+  <xacro:limo_left_steering_hinge parent_prefix="base_link" wheel_prefix="left_steering_joint">
     <origin xyz="${wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0"/>
   </xacro:limo_left_steering_hinge>
 
-  <!-- 오른쪽 앞바퀴: 반대측, 메시 방향 맞추기 위해 rpy의 roll을 PI로 -->
-  <xacro:limo_right_steering_hinge parent_prefix="base_link" wheel_prefix="right_steering_hinge">
+  <xacro:limo_right_steering_hinge parent_prefix="base_link" wheel_prefix="right_steering_joint">
     <origin xyz="${wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="${M_PI} 0 0"/>
   </xacro:limo_right_steering_hinge>
 
-  <!-- ===== Rear wheels (구동만, 조향 없음) ===== -->
+  <!-- ===== Rear wheels ===== -->
   <link name="rear_left_wheel_link">
     <inertial>
       <origin xyz="0 0 0"/>
@@ -70,20 +64,18 @@
       <inertia ixx="0.01055" ixy="0" ixz="0" iyy="0.00075" iyz="0" izz="0.01055"/>
     </inertial>
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
         <mesh filename="package://limo_description/meshes/limo_wheel.dae"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0 0"/>
       <geometry>
         <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
       </geometry>
     </collision>
   </link>
 
-  <joint name="rear_left_wheel" type="continuous">
+  <joint name="rear_left_joint" type="continuous">
     <parent link="base_link"/>
     <child link="rear_left_wheel_link"/>
     <origin xyz="${-wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0"/>
@@ -97,29 +89,24 @@
       <inertia ixx="0.01055" ixy="0" ixz="0" iyy="0.00075" iyz="0" izz="0.01055"/>
     </inertial>
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
         <mesh filename="package://limo_description/meshes/limo_wheel.dae"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0 0"/>
       <geometry>
         <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
       </geometry>
     </collision>
   </link>
 
-  <joint name="rear_right_wheel" type="continuous">
+  <joint name="rear_right_joint" type="continuous">
     <parent link="base_link"/>
     <child link="rear_right_wheel_link"/>
     <origin xyz="${-wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0"/>
     <axis xyz="0 -1 0"/>
   </joint>
 
-  <!-- ===== Gazebo 플러그인/마찰 세팅: 반드시 모든 변수/조인트 정의 이후에 include ===== -->
-  <!-- 충돌 회피용: 환경 꼬일 때는 아래 주석 한 줄을 풀어 "절대경로 include"로 먼저 테스트 -->
-  <!-- <xacro:include filename="/home/robotu/2lo/limo_ros2/limo_description/urdf/limo_ackerman.gazebo"/> -->
+  <!-- Gazebo 플러그인 include -->
   <xacro:include filename="$(find limo_description)/urdf/limo_ackerman.gazebo"/>
-
 </robot>

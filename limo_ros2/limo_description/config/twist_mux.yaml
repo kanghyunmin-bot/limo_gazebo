@@ -1,0 +1,11 @@
+topics:
+  - name: teleop
+    topic: /cmd_vel_teleop
+    timeout: 0.5
+    priority: 100
+  - name: nav2
+    topic: /cmd_vel
+    timeout: 0.5
+    priority: 50
+output:
+  topic: /ackermann_steering_controller/reference_unstamped
